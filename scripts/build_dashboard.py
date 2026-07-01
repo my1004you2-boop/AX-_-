@@ -37,12 +37,16 @@ def fig_to_div(fig, include_js=False) -> str:
         font=dict(family="Pretendard, 'Malgun Gothic', sans-serif", size=13),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
+        autosize=True,
+        height=380,
     )
     return pio.to_html(
         fig,
         include_plotlyjs="cdn" if include_js else False,
         full_html=False,
-        config={"displayModeBar": False},
+        config={"displayModeBar": False, "responsive": True},
+        default_width="100%",
+        default_height="380px",
     )
 
 
@@ -173,7 +177,9 @@ def render(basic: pd.DataFrame, test: pd.DataFrame) -> str:
   .chart-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }}
   .chart-box {{
     background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px;
+    overflow: hidden; min-width: 0;
   }}
+  .chart-box .plotly-graph-div {{ width: 100% !important; }}
   .filters {{ display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }}
   .filters select, .filters input {{
     padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px;

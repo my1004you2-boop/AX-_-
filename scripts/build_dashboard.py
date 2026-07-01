@@ -42,7 +42,7 @@ def fig_to_div(fig, include_js=False) -> str:
     )
     return pio.to_html(
         fig,
-        include_plotlyjs="cdn" if include_js else False,
+        include_plotlyjs="inline" if include_js else False,
         full_html=False,
         config={"displayModeBar": False, "responsive": True},
         default_width="100%",

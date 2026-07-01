@@ -31,7 +31,7 @@
 
 - 📄 [output/email_drafts.csv](output/email_drafts.csv) — **Basic 제출물** (lead_id, subject, body, review_flag / 50건)
 - 📄 [output/email_drafts_test.csv](output/email_drafts_test.csv) — **Standard 재현성 테스트 결과물** (100건, 별도 CSV로 검증)
-- 📊 [output/dashboard.html](output/dashboard.html) — `email_drafts.csv` 기반 정적 HTML 대시보드 (직책·review_flag·우선순위 분포 요약 뷰, `scripts/build_dashboard.py`로 재현 생성 — 별도 웹서버·배포 없이 파일만 열람)
+- 📊 [output/dashboard.html](https://htmlpreview.github.io/?https://raw.githubusercontent.com/my1004you2-boop/AX-_-/main/output/dashboard.html) — `email_drafts.csv` 기반 정적 HTML 대시보드 (직책·review_flag·우선순위 분포 요약 뷰, `scripts/build_dashboard.py`로 재현 생성. GitHub raw 파일을 htmlpreview.github.io로 렌더링 — 별도 서버·배포 없이 브라우저에서 바로 열람)
 - 📄 [output/박람회_리드_후속이메일_기획안.docx](output/박람회_리드_후속이메일_기획안.docx) — 기획안 워드 문서
 - 📄 [decisions.md](decisions.md) — 의사결정 로그 전체 (8건)
 - 📄 [.claude/skills/SKILL.md](.claude/skills/SKILL.md) — 재현 가능한 4단계 파이프라인 진입점 (Skill 원문)

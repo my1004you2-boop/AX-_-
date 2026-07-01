@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python -m pip install python-docx --quiet 2>&1)",
+      "PowerShell(python -c \"import docx; print\\('ok', docx.__file__\\)\")",
+      "PowerShell(python \"C:\\\\Users\\\\DC99~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-------Desktop-AX----05-----20260630T233021Z-3-001--05-----\\\\c56b6631-18bc-4cd5-a7ee-532bf2e0d843\\\\scratchpad\\\\build_docx.py\")",
+      "PowerShell(Import-Csv -Path \"data\\\\leads_dummy_100_test.csv\")",
+      "PowerShell(Import-Csv -Path \"c:\\\\Users\\\\팀스파르타\\\\Desktop\\\\AX해커톤\\\\05_키즐링-20260630T233021Z-3-001\\\\[05] 키즐링\\\\data\\\\leads_dummy_100_test.csv\")",
+      "PowerShell(Import-Csv -LiteralPath \"c:\\\\Users\\\\팀스파르타\\\\Desktop\\\\AX해커톤\\\\05_키즐링-20260630T233021Z-3-001\\\\[05] 키즐링\\\\data\\\\leads_dummy_100_test.csv\")",
+      "PowerShell(Import-Csv -LiteralPath \"c:\\\\Users\\\\팀스파르타\\\\Desktop\\\\AX해커톤\\\\05_키즐링-20260630T233021Z-3-001\\\\[05] 키즐링\\\\data\\\\leads_dummy_100_test.csv\" | Where-Object { $_.title -in @\\('PM','교장','주무관'\\) } | Select-Object lead_id, name, organization, org_type, title, interest_feature, follow_up_priority | Format-Table -AutoSize)",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "PowerShell(gh pr list)",
+      "PowerShell(Get-ChildItem -LiteralPath \"$env:TEMP\\\\docx_extract2\\\\word\" | Select-Object Name, Length)",
+      "PowerShell(Get-Location; Get-ChildItem -LiteralPath \\(Get-Location\\) -Force)",
+      "PowerShell(winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements)"
+    ]
+  }
+}

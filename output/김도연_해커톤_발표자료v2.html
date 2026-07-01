@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>김도연 해커톤 발표자료</title>
+<style>
+  :root{ --font-family:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;font-family:var(--font-family);background:#F1F1F3;-webkit-font-smoothing:antialiased;}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px 16px;}
+  .frame{width:min(1180px,100%);overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.10);}
+  .scale{transform-origin:top left;}
+  .slide{width:1920px;height:1080px;overflow:hidden;}
+  @media print{
+    html,body{background:#fff;}
+    .deck{gap:0;padding:0;}
+    .frame{width:1123px;box-shadow:none;height:632px!important;break-after:page;page-break-after:always;}
+    .scale{transform:scale(.5849)!important;}
+    @page{size:A4 landscape;margin:0;}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ========== 0. 표지 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:96px 112px;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;gap:14px;flex:none">
+    <span style="width:14px;height:14px;background:#FA0030;border-radius:3px;display:inline-block"></span>
+    <span style="font-size:24px;font-weight:700;letter-spacing:0.28em;color:#FA0030">AX HACKATHON 2026</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <p style="font-size:30px;font-weight:500;color:#A4A7B0;margin:0 0 20px">키즐링 문제</p>
+    <h1 style="font-size:88px;line-height:1.14;font-weight:800;letter-spacing:-0.02em;color:#0D0E11;margin:0;text-wrap:balance">리드 50명 후속 이메일, 8시간 수작업을<br>직책별 맞춤 초안 자동생성으로 풀었다</h1>
+    <p style="font-size:32px;font-weight:600;color:#FA0030;margin:32px 0 0">김도연 · 데이터 분석가</p>
+  </div>
+  <div style="flex:none;border-top:1px solid #E7E8EB;padding-top:28px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:20px;font-weight:500;color:#A4A7B0">2026.07.01 &nbsp;·&nbsp; 팀스파르타 AX 해커톤</span>
+    <span style="font-size:20px;font-weight:600;color:#666874">my1004you2@gmail.com &nbsp;·&nbsp; 010-5034-1531</span>
+  </div>
+</section></div></div>
+
+<!-- ========== 1. 한 장 요약 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:44px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#FA0030">EXECUTIVE SUMMARY</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">한 장 요약</h2>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div style="padding:28px 32px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px">
+        <div style="font-size:18px;font-weight:700;letter-spacing:0.12em;color:#A4A7B0;margin-bottom:12px">받은 문제 (원문)</div>
+        <p style="font-size:24px;font-weight:500;line-height:1.6;color:#40414B;margin:0">박람회에서 수집한 리드 명단 CSV를 분석해, 직책별 소구점이 반영된 개인화 후속 이메일 초안을 자동 생성하라. 원장은 원생효과·학부모만족, 팀장은 도입난이도·공수절감, 사업개발은 수익모델·파트너십을 각각 다르게 소구하고, 상담 메모 결측·모호, 이메일 결측 리드는 예외 처리(review_flag)할 것.</p>
+      </div>
+      <div style="padding:28px 32px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px">
+        <div style="font-size:18px;font-weight:700;letter-spacing:0.12em;color:#A4A7B0;margin-bottom:12px">만든 것</div>
+        <p style="font-size:26px;font-weight:600;line-height:1.5;color:#0D0E11;margin:0">리드 CSV만 넣으면 직책별 소구점·CTA가 반영된 개인화 후속 이메일 초안 50건을 자동 생성하고, 결측·모호·중복 리드는 사람이 검토하도록 자동으로 표시하는 파이프라인</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="flex:1;background:#FFF7FC;border:2px solid #FFE0ED;border-radius:14px;padding:28px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#D80028;margin-bottom:10px">핵심 임팩트</div>
+        <div style="font-size:76px;font-weight:800;color:#FA0030;line-height:1.0">50건 자동</div>
+        <div style="font-size:24px;font-weight:600;color:#D80028;margin-top:10px">1건당 10~15분(총 8시간+) 수작업 → 전량 자동 초안 생성</div>
+      </div>
+      <div style="padding:24px 28px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;display:flex;align-items:center;gap:18px">
+        <span style="font-size:40px;flex:none">▶</span>
+        <div>
+          <div style="font-size:18px;font-weight:700;color:#0D0E11;margin-bottom:6px">데모</div>
+          <a href="https://app.notion.com/p/AX-05-_-39092edec00f80bb8e98f2f7f8ef1f1d?source=copy_link" style="font-size:21px;font-weight:600;color:#FA0030;word-break:break-all;text-decoration:none">Notion 결과물 보기</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+
+<!-- ========== 2. 문제 이해 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:36px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#FA0030">PROBLEM DEFINITION</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">문제 이해</h2>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;min-height:0">
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;letter-spacing:0.12em;color:#A4A7B0;margin-bottom:14px">기업 원문 문제</div>
+      <p style="font-size:23px;font-weight:500;line-height:1.6;color:#40414B;margin:0">박람회 리드 CSV를 넣으면 직책별(원장/팀장/사업개발) 소구점이 반영된 개인화 후속 이메일 초안을 자동 생성하고, 상담 메모·이메일 결측 리드는 예외 처리하라.</p>
+    </div>
+    <div style="background:#FFF7FC;border:2px solid #FFE0ED;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;letter-spacing:0.12em;color:#FA0030;margin-bottom:14px">내가 재정의한 문제</div>
+      <p style="font-size:23px;font-weight:500;line-height:1.6;color:#0D0E11;margin:0">진짜 문제는 "이메일을 대신 써주는 것"이 아니라, 영업 담당자 1인이 48시간 골든타임 안에 50명 각각의 상담 맥락·직책 니즈를 놓치지 않고 반영하는 것. 데이터가 비어있거나 애매한데 억지로 채우면 오히려 신뢰를 잃으므로, 예외를 정확히 골라내는 것이 자동화의 핵심 난이도.</p>
+    </div>
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;letter-spacing:0.12em;color:#A4A7B0;margin-bottom:14px">문제의 크기 (Before)</div>
+      <p style="font-size:23px;font-weight:500;line-height:1.6;color:#40414B;margin:0">리드 1명당 후속 이메일 작성 10~15분 → 50명이면 8시간 이상, 담당자 1인 감당 불가. 후속이 늦어지면 48시간 골든타임을 놓쳐 경쟁사에 리드를 뺏김.</p>
+    </div>
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;letter-spacing:0.12em;color:#A4A7B0;margin-bottom:14px">스코프 — 푼 것 / 안 푼 것</div>
+      <p style="font-size:23px;font-weight:500;line-height:1.6;color:#40414B;margin:0">O 직책별 소구점·CTA 매핑, 개인화 4요소 초안 50건, 결측·모호·중복 예외처리, 100건 새 CSV 재현성 검증, 캠페인 기획안 2건 / X 실제 발송(SMTP), CRM 연동, 리드 스코어링 직접 산출, 다국어, 대시보드</p>
+    </div>
+  </div>
+</section></div></div>
+
+<!-- ========== 3. 해결 접근 & 의사결정 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:36px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#FA0030">APPROACH &amp; DECISION</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">해결 접근 &amp; 의사결정</h2>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="padding:24px 28px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px">
+        <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">접근 가설 / 핵심 흐름</div>
+        <p style="font-size:22px;font-weight:500;line-height:1.6;color:#40414B;margin:0">리드 CSV 확인 → 직책·데이터품질 분석 → 직책별 소구점·CTA 규칙 설계 → 리드별 초안 자동 생성 → 자가 점검. 데이터가 비어있거나 애매한 리드는 사람이 검토하도록 별도로 표시.</p>
+      </div>
+      <div style="padding:24px 28px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px">
+        <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">버린 대안 &amp; 이유</div>
+        <p style="font-size:22px;font-weight:500;line-height:1.6;color:#40414B;margin:0">전 직책 공통 CTA("상담 신청")로 통일 — 원장(단독결정)·팀장(실무검토)·사업개발(계약구조설계)의 결정 구조가 달라 효과가 떨어질 것으로 판단해 폐기. 우선순위 낮은 리드까지 강하게 미팅을 요청하는 안도 이탈 위험으로 폐기.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="padding:24px 28px;background:#FFF7FC;border:2px solid #FFE0ED;border-radius:14px;flex:1.4">
+        <div style="font-size:17px;font-weight:700;color:#FA0030;margin-bottom:12px">★ 막혔던 지점 &amp; 돌파 방법</div>
+        <p style="font-size:22px;font-weight:500;line-height:1.6;color:#0D0E11;margin:0">직책이 "원장"으로 똑같이 적혀 있어도 실제로는 초등학교 교장·지역아동센터 센터장·태권도장 관장이 섞여 있어, 그대로 "원장님"이라 부르면 어색했다. → 소구점·CTA는 원장 그룹 그대로 두고 인사말 호칭만 교장님/센터장님/관장님으로 바꾸는 규칙을 추가. 이후 100건 재현성 테스트에 등장한 신규 직책값(교장·PM·주무관)도 같은 원리로 매핑 규칙을 세워 규칙이 깨지지 않게 했다.</p>
+      </div>
+      <div style="padding:24px 28px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px">
+        <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">AI vs 내 판단</div>
+        <p style="font-size:22px;font-weight:500;line-height:1.6;color:#40414B;margin:0">AI에 맡긴 것: 50건 개인화 이메일 문구 초안 생성, 결측·모호 데이터 자동 탐지. 내가 직접 결정한 것: 직책별 소구점·CTA 매핑 기준, review_flag 판단 기준, 우선순위×직책 CTA 강도 매트릭스, 캠페인 세그먼트 선정 가중치(규모×의향 40%·계약임팩트 40%·골든타임 20%).</p>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+
+<!-- ========== 4. 산출물 & 실증 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:36px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#FA0030">OUTPUT &amp; DEMO</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">산출물 &amp; 실증</h2>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1.5fr 1fr;gap:40px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="flex:1;background:#F1F1F3;border-radius:14px;display:flex;align-items:center;justify-content:center;min-height:300px;position:relative">
+        <div style="text-align:center;color:#A4A7B0">
+          <div style="font-size:60px;margin-bottom:10px">▶</div>
+          <div style="font-size:26px;font-weight:700;margin-bottom:8px">이메일 초안 카드 뷰 (sample-basic.html)</div>
+          <div style="font-size:20px;font-weight:500">리드별 제목·본문·review_flag가 채워진 카드형 이메일 예시</div>
+        </div>
+      </div>
+      <div style="padding:20px 26px;background:#F9F9FA;border:1px solid #E7E8EB;border-radius:12px;display:flex;align-items:center;gap:16px">
+        <span style="font-size:20px;font-weight:700;color:#0D0E11;flex:none">데모 링크</span>
+        <a href="https://app.notion.com/p/AX-05-_-39092edec00f80bb8e98f2f7f8ef1f1d?source=copy_link" style="font-size:21px;font-weight:600;color:#FA0030;text-decoration:none;word-break:break-all">Notion 제출 요약 · 결과물 보기</a>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px"><span style="width:10px;height:10px;background:#FA0030;border-radius:2px;display:inline-block"></span><span style="font-size:24px;font-weight:700;color:#0D0E11">실제 동작 한 사이클</span></div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;gap:14px;align-items:flex-start"><span style="background:#FA0030;color:#fff;font-size:15px;font-weight:700;padding:5px 12px;border-radius:6px;flex:none;margin-top:2px">입력</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">리드 1건: 이름·기관명·직책·이메일·부스 상담 메모·관심 제품·우선순위(상/중/하)</p></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><span style="background:#D80028;color:#fff;font-size:15px;font-weight:700;padding:5px 12px;border-radius:6px;flex:none;margin-top:2px">처리</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">직책별 소구점 규칙(원장=원생효과·팀장=도입난이도·사업개발=수익모델)에 맞춰 인사말·상담내용 언급·제품 연결·CTA를 조합. 예) "영어스피치 대회를 수기로 진행해 힘들다"는 원장님 상담 메모 → 대회 자동화 소개 + 무료 데모 CTA로 연결. 상담 메모가 비었거나 애매하면 review_flag=Y, 이메일이 없으면 발송 대신 내부메모로 전환.</p></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><span style="background:#40414B;color:#fff;font-size:15px;font-weight:700;padding:5px 12px;border-radius:6px;flex:none;margin-top:2px">결과</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">제목·본문(250~400자)·review_flag가 채워진 이메일 초안 50건(email_drafts.csv). 예외 5건은 사람이 보강 후 발송하도록 별도 표시.</p></div>
+      </div>
+      <div style="margin-top:24px;padding:20px 24px;background:#FFF7FC;border:1px solid #FFE0ED;border-radius:12px">
+        <p style="font-size:20px;font-weight:500;line-height:1.6;color:#40414B;margin:0"><span style="color:#FA0030;font-weight:700">핵심: </span>담당자는 기술을 모른다. "어떻게 만들었나"가 아니라 <span style="font-weight:700">"무슨 일을 대신해 주는가"</span>로 설명. 깊은 기술 디테일은 별첨으로.</p>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+
+<!-- ========== 5. 임팩트 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:36px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#FA0030">IMPACT</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">임팩트</h2>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;min-height:0">
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px"><span style="width:10px;height:10px;background:#FA0030;border-radius:2px;display:inline-block"></span><span style="font-size:24px;font-weight:700;color:#0D0E11">Before / After</span></div>
+      <table style="width:100%;border-collapse:collapse;font-size:23px">
+        <thead>
+          <tr style="background:#0D0E11;color:#fff">
+            <th style="padding:14px 18px;text-align:left;font-weight:700;border-radius:10px 0 0 0">핵심 지표</th>
+            <th style="padding:14px 18px;text-align:center;font-weight:700">Before</th>
+            <th style="padding:14px 18px;text-align:center;font-weight:700;border-radius:0 10px 0 0;color:#FA0030">After</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #E7E8EB">
+            <td style="padding:16px 18px;font-weight:600;color:#40414B">이메일 1건 작성 시간</td>
+            <td style="padding:16px 18px;text-align:center;color:#A4A7B0;font-weight:600">10~15분/건</td>
+            <td style="padding:16px 18px;text-align:center;color:#FA0030;font-weight:800">자동 생성(즉시)</td>
+          </tr>
+          <tr style="border-bottom:1px solid #E7E8EB">
+            <td style="padding:16px 18px;font-weight:600;color:#40414B">리드 50건 전체 처리 시간</td>
+            <td style="padding:16px 18px;text-align:center;color:#A4A7B0;font-weight:600">8시간 이상</td>
+            <td style="padding:16px 18px;text-align:center;color:#FA0030;font-weight:800">전량 자동 생성 + 5건만 사람 검토</td>
+          </tr>
+          <tr>
+            <td style="padding:16px 18px;font-weight:600;color:#40414B">예외(결측·모호·중복) 누락 위험</td>
+            <td style="padding:16px 18px;text-align:center;color:#A4A7B0;font-weight:600">수작업 시 누락 상존</td>
+            <td style="padding:16px 18px;text-align:center;color:#FA0030;font-weight:800">100% 자동 탐지·표시(결측1·모호4·중복1)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:17px;font-weight:500;color:#A4A7B0;margin:12px 0 0">* 10~15분/건, 8시간 기준은 기업이 제출한 문제 원문의 실제 소요시간. 자동 생성 시간은 Claude Code 파이프라인 처리 결과 기준(실측 A/B 비교는 아님).</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span style="width:10px;height:10px;background:#FA0030;border-radius:2px;display:inline-block"></span><span style="font-size:24px;font-weight:700;color:#0D0E11">정성 효과</span></div>
+      <div style="display:flex;gap:14px;align-items:flex-start"><span style="color:#FA0030;font-size:22px;font-weight:800;flex:none">✓</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">직책별 톤이 안 갈려 "아무에게도 안 꽂히던" 이메일이, 원장=재능·만족 / 팀장=도입공수 / 사업개발=수익모델로 명확히 갈라짐</p></div>
+      <div style="display:flex;gap:14px;align-items:flex-start"><span style="color:#FA0030;font-size:22px;font-weight:800;flex:none">✓</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">상담 메모 결측·모호·이메일 없음·중복 리드를 사람이 놓치기 전에 자동으로 짚어줘, 신뢰가 필요한 리드에 어설픈 이메일이 나가는 사고를 예방</p></div>
+      <div style="display:flex;gap:14px;align-items:flex-start"><span style="color:#FA0030;font-size:22px;font-weight:800;flex:none">✓</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">소구점·CTA·review_flag 기준을 규칙으로 남겨 100건 신규 리드에도 코드 변경 없이 그대로 재사용 — 다음 박람회에도 바로 적용 가능한 자산화</p></div>
+    </div>
+  </div>
+</section></div></div>
+
+<!-- ========== 6. 적용 가능성 & 아쉬움 & 비전 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:36px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#FA0030">APPLICABILITY &amp; REFLECTION</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">적용 가능성 &amp; 아쉬움 &amp; 비전</h2>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;min-height:0">
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:20px;letter-spacing:0.08em">우리 환경 적용 시</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#40414B;font-size:20px;font-weight:800;flex:none">·</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">실제 발송을 붙이려면 사내 메일 발송 채널 연동이 필요 — 이번 범위는 발송 직전 초안까지</p></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#40414B;font-size:20px;font-weight:800;flex:none">·</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">리드 CSV의 직책·상담메모·우선순위 컬럼 구조가 유지되어야 동일 규칙을 그대로 적용 가능</p></div>
+      </div>
+    </div>
+    <div style="background:#FFF7FC;border:2px solid #FFE0ED;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;color:#FA0030;margin-bottom:20px;letter-spacing:0.08em">솔직한 아쉬움</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#FA0030;font-size:20px;font-weight:800;flex:none">·</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">review_flag=Y 5건은 결국 사람이 상담 메모를 다시 채워야 발송 가능 — 완전 자동화는 아님</p></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#FA0030;font-size:20px;font-weight:800;flex:none">·</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">우선순위(상/중/하)는 입력값을 그대로 썼을 뿐, 실제 계약 성사 가능성까지 반영한 스코어링은 하지 못함</p></div>
+      </div>
+    </div>
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:28px">
+      <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:20px;letter-spacing:0.08em">2주 더 준다면</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#FA0030;font-size:20px;font-weight:800;flex:none">→</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">리드 스코어링까지 통합해 사람이 검토해야 하는 review_flag 비율을 더 줄이는 방향 검토</p></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#FA0030;font-size:20px;font-weight:800;flex:none">→</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">설계해둔 캠페인 2건(에듀테크 팀장 도입 트랙, BD 파트너십 트랙)을 실제 Day0~7 발송 스케줄로 운영</p></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#FA0030;font-size:20px;font-weight:800;flex:none">→</span><p style="font-size:22px;font-weight:500;line-height:1.55;color:#40414B;margin:0">정식 합류 시, 박람회 외 웹 문의·SNS 채널 리드까지 같은 규칙으로 통합 관리하는 데까지 확장 가능</p></div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+
+<!-- ========== 7. 마무리 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="position:relative;font-family:var(--font-family);background:#1D1E23;color:#FFFFFF;padding:96px 112px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px"><span style="width:14px;height:14px;background:#FA0030;border-radius:3px;display:inline-block"></span><span style="font-size:24px;font-weight:700;letter-spacing:0.28em;color:#FA0030">CLOSING</span></div>
+  <h1 style="font-size:96px;font-weight:800;letter-spacing:-0.02em;margin:0 0 32px;line-height:1.05">이 문제, 계속 맡고 싶습니다</h1>
+  <p style="font-size:28px;font-weight:500;color:#BDC0C7;margin:0 0 18px;max-width:1300px;line-height:1.65">정식 합류 시 박람회뿐 아니라 웹 문의·SNS 등 모든 채널에서 들어오는 리드에 동일한 직책별 맞춤 후속 로직을 적용하는 데까지 확장 가능합니다.</p>
+  <p style="font-size:26px;font-weight:500;color:#858893;margin:0;max-width:1300px;line-height:1.65">결측·모호·중복이라는 데이터의 빈틈을 규칙으로 끝까지 짚어낸 것처럼, 저는 숫자와 예외 케이스를 놓치지 않고 파고드는 방식으로 이 문제를 풀었습니다.</p>
+  <div style="font-size:24px;font-weight:600;color:#FFFFFF;margin-top:52px">my1004you2@gmail.com &nbsp;·&nbsp; 010-5034-1531</div>
+  <div style="position:absolute;bottom:56px;font-size:18px;font-weight:500;color:#666874">2026.07.01 &nbsp;·&nbsp; 팀스파르타 AX 해커톤 &nbsp;·&nbsp; 김도연</div>
+</section></div></div>
+
+<!-- ========== (별첨) 기술 & 논리 상세 ========== -->
+<div class="frame"><div class="scale"><section class="slide" style="font-family:var(--font-family);background:#FFFFFF;color:#0D0E11;padding:80px 112px;display:flex;flex-direction:column">
+  <div style="flex:none;margin-bottom:36px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="width:12px;height:12px;background:#A4A7B0;border-radius:3px;display:inline-block"></span><span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#A4A7B0">APPENDIX</span></div>
+    <h2 style="font-size:54px;line-height:1.1;font-weight:700;color:#0D0E11;margin:0">(별첨) 기술 &amp; 논리 상세</h2>
+    <p style="font-size:22px;font-weight:500;color:#A4A7B0;margin:12px 0 0">기술 검증을 원하는 담당자만 여기로 — 본문은 비즈니스 언어로만</p>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;min-height:0">
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:26px">
+      <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">워크플로우 구조 / 파이프라인</div>
+      <p style="font-size:21px;font-weight:500;line-height:1.6;color:#40414B;margin:0">새 리드 CSV 투입 → /analyze(직책·결측·중복 분석) → /insight(직책별 소구점·CTA·review_flag 기준 설계) → /generate(리드별 초안+review_flag 생성) → /review(직책 차별화·개인화 4요소·예외처리 자가점검), 총 4단계</p>
+    </div>
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:26px">
+      <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">사용 도구 &amp; 주요 노드</div>
+      <p style="font-size:21px;font-weight:500;line-height:1.6;color:#40414B;margin:0">Claude Code 슬래시 커맨드 4개(/analyze, /insight, /generate, /review)를 Skill 1개(kizzling-lead-followup-email)로 패키징. 별도 API·외부 자동화 툴 없이 대화형으로 전량 생성</p>
+    </div>
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:26px">
+      <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">데이터 처리 과정</div>
+      <p style="font-size:21px;font-weight:500;line-height:1.6;color:#40414B;margin:0">입력: leads_sample.csv(50행, lead_id/name/organization/org_type/title/email/consultation_note/interest_feature/follow_up_priority) → 출력: email_drafts.csv(lead_id/subject/body/review_flag)</p>
+    </div>
+    <div style="background:#F9F9FA;border:1px solid #E7E8EB;border-radius:14px;padding:26px">
+      <div style="font-size:17px;font-weight:700;color:#A4A7B0;margin-bottom:12px">추가 테스트 기록 / JSON·코드</div>
+      <p style="font-size:21px;font-weight:500;line-height:1.6;color:#40414B;margin:0">100건 신규 더미 CSV(leads_dummy_100_test.csv)로 재현성 검증: 이메일결측 1건·상담메모 결측/모호 9건·review_flag=Y 10건·신규 직책값(교장6/PM11/주무관6) 매핑 규칙대로 정상 처리, 완전중복 0건 → 규칙 변경 없이 email_drafts_test.csv로 재현 성공</p>
+    </div>
+  </div>
+</section></div></div>
+
+</div>
+<script>
+  function fitDeck(){
+    document.querySelectorAll('.frame').forEach(function(f){
+      var s = f.clientWidth / 1920;
+      f.querySelector('.scale').style.transform = 'scale(' + s + ')';
+      f.style.height = (1080 * s) + 'px';
+    });
+  }
+  window.addEventListener('resize', fitDeck);
+  fitDeck();
+</script>
+</body>
+</html>

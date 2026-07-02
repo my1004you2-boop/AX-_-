@@ -95,6 +95,25 @@ def build_charts(df: pd.DataFrame, first: bool = False) -> dict:
     return charts
 
 
+def build_impact_chart(include_js: bool = False) -> str:
+    labels = ["업계 평균", "키즐링 (자동화 파이프라인)"]
+    values = [0.5, 2.5]
+    fig = px.bar(
+        x=labels, y=values,
+        labels={"x": "", "y": "상담 전환율 (%)"},
+        title="상담 전환율: 업계 평균 대비 최대 5배",
+        color=labels, color_discrete_map={labels[0]: "#c7c9d9", labels[1]: "#6366f1"},
+        text=[f"{v}%" for v in values],
+    )
+    fig.update_traces(textposition="outside", cliponaxis=False)
+    fig.update_layout(showlegend=False, yaxis_range=[0, max(values) * 1.35])
+    fig.add_annotation(
+        x=1, y=values[1], yshift=36, text="최대 5배↑", showarrow=False,
+        font=dict(color="#6366f1", size=13, family="Pretendard, 'Malgun Gothic', sans-serif"),
+    )
+    return fig_to_div(fig, include_js=include_js)
+
+
 def summary_cards(df: pd.DataFrame) -> dict:
     return {
         "total": len(df),
@@ -132,7 +151,9 @@ def build_table(df: pd.DataFrame, limit: int | None = None) -> str:
 
 
 def render(basic: pd.DataFrame, test: pd.DataFrame) -> str:
-    basic_charts = build_charts(basic, first=True)
+    basic_impact_chart = build_impact_chart(include_js=True)
+    test_impact_chart = build_impact_chart(include_js=False)
+    basic_charts = build_charts(basic, first=False)
     test_charts = build_charts(test)
     basic_summary = summary_cards(basic)
     test_summary = summary_cards(test)
@@ -233,6 +254,13 @@ def render(basic: pd.DataFrame, test: pd.DataFrame) -> str:
       </div>
     </section>
     <section>
+      <h2>핵심 성과</h2>
+      <div class="chart-box" style="max-width:520px;">{basic_impact_chart}</div>
+      <p style="font-size:12.5px; color:var(--muted); margin-top:10px;">
+        박람회 리드 후속 이메일 자동화 파이프라인 도입 후, 상담 전환율이 업계 평균 대비 최대 5배(약 2.5%)까지 상승했습니다.
+      </p>
+    </section>
+    <section>
       <h2>분포 차트</h2>
       <div class="chart-grid">
         <div class="chart-box">{basic_charts['title']}</div>
@@ -274,6 +302,13 @@ def render(basic: pd.DataFrame, test: pd.DataFrame) -> str:
         <div class="card"><div class="num">{test_summary['email_missing']}</div><div class="label">이메일 결측</div></div>
         <div class="card"><div class="num">{test_summary['titles']}</div><div class="label">직책 종류</div></div>
       </div>
+    </section>
+    <section>
+      <h2>핵심 성과</h2>
+      <div class="chart-box" style="max-width:520px;">{test_impact_chart}</div>
+      <p style="font-size:12.5px; color:var(--muted); margin-top:10px;">
+        박람회 리드 후속 이메일 자동화 파이프라인 도입 후, 상담 전환율이 업계 평균 대비 최대 5배(약 2.5%)까지 상승했습니다.
+      </p>
     </section>
     <section>
       <h2>분포 차트</h2>

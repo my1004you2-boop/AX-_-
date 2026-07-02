@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>키즐링 — 박람회 리드 후속 이메일 자동화</title>
+<style>
+  :root{
+    --bg:#EEF3F0;
+    --panel:#FFFFFF;
+    --ink:#132019;
+    --ink-soft:#54655C;
+    --line:rgba(19,32,25,0.12);
+    --line-strong:rgba(19,32,25,0.22);
+    --cover-bg:#0D1712;
+    --cover-fg:#F2F6F3;
+    --coral:#FF6A39;
+    --coral-ink:#8A2E10;
+    --coral-tint:#FFE6DB;
+    --teal:#0E8F76;
+    --teal-ink:#0A5C4C;
+    --teal-tint:#DDF2EC;
+    --indigo:#5A4FCF;
+    --indigo-ink:#3A3184;
+    --indigo-tint:#E7E4FA;
+    --amber:#C9871A;
+    --amber-tint:#FBEBD1;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:"Malgun Gothic","Apple SD Gothic Neo",-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  .num{font-family:ui-monospace,"SF Mono",Consolas,"Roboto Mono",monospace;font-variant-numeric:tabular-nums;}
+  .eyebrow{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--ink-soft);}
+  h1,h2,h3{text-wrap:balance;margin:0;font-weight:800;letter-spacing:-0.01em;}
+  p{margin:0;text-wrap:pretty;}
+  a{color:inherit;}
+
+  /* nav */
+  .navbar{position:sticky;top:0;z-index:50;background:rgba(238,243,240,0.92);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+  .navrow{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:10px 24px;overflow-x:auto;}
+  .navrow a{flex:none;font-family:ui-monospace,Consolas,monospace;font-size:11.5px;letter-spacing:.03em;
+    padding:6px 10px;border-radius:999px;color:var(--ink-soft);text-decoration:none;white-space:nowrap;}
+  .navrow a:hover,.navrow a:focus-visible{background:var(--panel);color:var(--ink);outline:1px solid var(--line-strong);}
+
+  section{box-sizing:border-box;width:100%;aspect-ratio:16/9;padding:48px 64px;
+    display:flex;flex-direction:column;justify-content:center;overflow-y:auto;}
+  .wrap{max-width:1120px;margin:0 auto;width:100%;}
+  .wrap-narrow{max-width:760px;margin:0 auto;width:100%;}
+
+  /* cover */
+  #s0{background:var(--cover-bg);color:var(--cover-fg);padding:56px 24px 84px;position:relative;}
+  #s0 .eyebrow{color:#9FB3A6;}
+  .presenter-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+    margin-bottom:44px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,0.16);}
+  .presenter-id{display:flex;align-items:center;gap:14px;}
+  .presenter-id .avatar{flex:none;width:48px;height:48px;border-radius:50%;background:var(--coral);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:-0.02em;}
+  .presenter-id .who b{display:block;color:#fff;font-size:19px;font-weight:800;}
+  .presenter-id .who span{display:block;margin-top:3px;font-family:ui-monospace,Consolas,monospace;
+    font-size:12.5px;letter-spacing:.03em;color:#9FB3A6;}
+  .gh-pill{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,Consolas,monospace;
+    font-size:13.5px;letter-spacing:.01em;color:#EAF3EE;text-decoration:none;border:1px solid rgba(255,255,255,0.3);
+    border-radius:999px;padding:10px 18px;background:rgba(255,255,255,0.06);transition:background .15s,border-color .15s;}
+  .gh-pill:hover,.gh-pill:focus-visible{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.55);}
+  .gh-pill .arrow{color:var(--coral);font-weight:800;}
+  #s0 h1{font-size:clamp(34px,5.2vw,58px);line-height:1.18;margin:18px 0 22px;color:#fff;}
+  #s0 .tag{color:var(--coral);}
+  #s0 .lede{font-size:18px;line-height:1.7;color:#CBD8CF;max-width:640px;}
+  .meta-row{display:flex;gap:28px;flex-wrap:wrap;margin-top:40px;padding-top:28px;
+    border-top:1px solid rgba(255,255,255,0.14);}
+  .meta-row div{font-size:13px;color:#9FB3A6;}
+  .meta-row b{display:block;color:#fff;font-size:15px;font-weight:700;margin-bottom:3px;}
+  .timeline{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px;}
+  .timeline span{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:#9FB3A6;
+    border:1px solid rgba(255,255,255,0.16);border-radius:999px;padding:5px 11px;}
+
+  h2.slide-title{font-size:clamp(24px,3vw,32px);margin-bottom:8px;}
+  .slide-head{margin-bottom:40px;}
+  .slide-head .eyebrow{margin-bottom:10px;display:block;}
+  .slide-head .sub{color:var(--ink-soft);font-size:15.5px;line-height:1.65;margin-top:10px;max-width:680px;}
+
+  /* section 1 exec summary */
+  #s1{background:var(--panel);}
+  .quote-block{background:var(--bg);border-left:3px solid var(--ink);padding:18px 22px;border-radius:4px;
+    font-size:15px;line-height:1.75;color:var(--ink);margin-bottom:28px;}
+  .grid-2{display:grid;grid-template-columns:1.1fr 0.9fr;gap:32px;}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
+  .stat{border:1px solid var(--line);border-radius:10px;padding:18px 16px;background:var(--panel);}
+  .stat .num{font-size:26px;font-weight:800;color:var(--coral-ink);display:block;}
+  .stat .label{font-size:12.5px;color:var(--ink-soft);margin-top:4px;line-height:1.4;}
+  .scope-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .scope-list li{font-size:14.5px;line-height:1.55;padding-left:20px;position:relative;}
+  .scope-list li.did::before{content:"✓";position:absolute;left:0;color:var(--teal-ink);font-weight:800;}
+  .scope-list li.didnot::before{content:"—";position:absolute;left:0;color:var(--ink-soft);}
+
+  /* section 2 problem */
+  #s2{background:var(--bg);}
+  .pain-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px;}
+  .pain{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 20px 18px;}
+  .pain .n{font-family:ui-monospace,Consolas,monospace;color:var(--coral-ink);font-size:12px;font-weight:700;}
+  .pain h3{font-size:16px;margin:8px 0 6px;}
+  .pain p{font-size:13.8px;color:var(--ink-soft);line-height:1.55;}
+  .reframe{margin-top:32px;background:var(--indigo-tint);border-radius:12px;padding:24px 26px;}
+  .reframe .eyebrow{color:var(--indigo-ink);}
+  .reframe p{font-size:15.5px;line-height:1.7;margin-top:10px;color:var(--ink);}
+  .bench-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px;}
+  .bench-table th,.bench-table td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);}
+  .bench-table th{color:var(--ink-soft);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+  .bench-table td.num{font-weight:700;}
+
+  /* section 3 approach */
+  #s3{background:var(--panel);}
+  .flow{display:flex;align-items:stretch;gap:0;margin:28px 0 36px;overflow-x:auto;padding-bottom:6px;}
+  .flow .node{flex:1;min-width:150px;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:16px 14px;font-size:13.3px;line-height:1.5;position:relative;}
+  .flow .node .step{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--ink-soft);}
+  .flow .arrow{flex:none;width:28px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:16px;}
+  .decision-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:10px;}
+  .dcard{border:1px solid var(--line);border-radius:10px;padding:18px;background:var(--panel);}
+  .dcard .tag{display:inline-block;font-family:ui-monospace,Consolas,monospace;font-size:10.5px;
+    letter-spacing:.03em;padding:2px 8px;border-radius:999px;margin-bottom:10px;}
+  .dcard.blocked .tag{background:var(--amber-tint);color:#8A5C0E;}
+  .dcard.judgment .tag{background:var(--indigo-tint);color:var(--indigo-ink);}
+  .dcard h3{font-size:14.5px;margin-bottom:6px;}
+  .dcard p{font-size:13.3px;color:var(--ink-soft);line-height:1.55;}
+  .split-ai{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;}
+  .split-ai>div{border-radius:10px;padding:18px 20px;}
+  .split-ai .ai{background:var(--teal-tint);}
+  .split-ai .human{background:var(--coral-tint);}
+  .split-ai .eyebrow{display:block;margin-bottom:8px;}
+  .split-ai .ai .eyebrow{color:var(--teal-ink);}
+  .split-ai .human .eyebrow{color:var(--coral-ink);}
+  .split-ai ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.6;}
+
+  /* section 4 output demo */
+  #s4{background:var(--bg);}
+  .role-badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
+    padding:3px 10px;border-radius:999px;font-family:ui-monospace,Consolas,monospace;}
+  .role-원장{background:var(--coral-tint);color:var(--coral-ink);}
+  .role-팀장{background:var(--teal-tint);color:var(--teal-ink);}
+  .role-사업개발{background:var(--indigo-tint);color:var(--indigo-ink);}
+  .email-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;}
+  .email-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;
+    display:flex;flex-direction:column;gap:10px;}
+  .email-card .subj{font-size:13.5px;font-weight:700;line-height:1.4;}
+  .email-card .body-text{font-size:12.6px;line-height:1.62;color:var(--ink-soft);max-height:200px;overflow:auto;}
+  .email-card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;
+    padding-top:10px;border-top:1px dashed var(--line);}
+  .cta-chip{font-size:11px;font-weight:700;color:var(--ink);background:var(--bg);border:1px solid var(--line-strong);
+    border-radius:6px;padding:3px 8px;}
+  .flag{font-family:ui-monospace,Consolas,monospace;font-size:11px;font-weight:800;}
+  .flag.Y{color:#8A5C0E;}
+  .flag.N{color:var(--ink-soft);}
+  .exception-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+  .exc-card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);
+    border-radius:8px;padding:16px 18px;}
+  .exc-card .eyebrow{color:#8A5C0E;}
+  .exc-card p{font-size:13.3px;line-height:1.55;margin-top:8px;color:var(--ink-soft);}
+
+  /* section 5 impact */
+  #s5{background:var(--panel);}
+  table.impact{width:100%;border-collapse:collapse;margin-top:10px;}
+  table.impact th,table.impact td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:14px;}
+  table.impact th{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+  table.impact td.before{color:var(--ink-soft);}
+  table.impact td.after{font-weight:700;color:var(--teal-ink);}
+  .repro-wrap{overflow-x:auto;margin-top:14px;}
+  table.repro{width:100%;border-collapse:collapse;min-width:640px;}
+  table.repro th,table.repro td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:13.3px;text-align:left;}
+  table.repro th{font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;}
+  table.repro td.num{font-weight:700;}
+  .assumption{margin-top:20px;background:var(--bg);border-radius:10px;padding:16px 20px;font-size:13px;
+    color:var(--ink-soft);line-height:1.6;}
+  .assumption b{color:var(--ink);}
+
+  /* section 6 challenge + limits */
+  #s6{background:var(--bg);}
+  .campaign-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;}
+  .campaign{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;}
+  .campaign .p-badge{font-family:ui-monospace,Consolas,monospace;font-size:11px;font-weight:800;
+    background:var(--indigo-tint);color:var(--indigo-ink);padding:3px 9px;border-radius:6px;}
+  .campaign h3{font-size:15.5px;margin:10px 0 8px;}
+  .campaign .seg{font-size:12.6px;color:var(--ink-soft);font-family:ui-monospace,Consolas,monospace;
+    background:var(--bg);border-radius:6px;padding:6px 9px;margin-bottom:10px;line-height:1.5;}
+  .campaign ol{margin:0 0 10px;padding-left:18px;font-size:13px;line-height:1.6;color:var(--ink);}
+  .campaign .score{font-size:12.5px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:8px;margin-top:auto;}
+  .honest-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px;}
+  .honest{border-radius:10px;padding:20px;}
+  .honest.limit{background:var(--coral-tint);}
+  .honest.next{background:var(--teal-tint);}
+  .honest .eyebrow.limit-e{color:var(--coral-ink);}
+  .honest .eyebrow.next-e{color:var(--teal-ink);}
+  .honest ul{margin:10px 0 0;padding-left:18px;font-size:13.3px;line-height:1.65;}
+
+  /* section 7 closing */
+  #s7{background:var(--cover-bg);color:var(--cover-fg);}
+  #s7 .eyebrow{color:#9FB3A6;}
+  #s7 h2.slide-title{color:#fff;}
+  #s7 .slide-head .sub{color:#CBD8CF;}
+  .closing-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px;}
+  .closing-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:22px;}
+  .closing-card .eyebrow{color:var(--coral);margin-bottom:10px;display:block;}
+  .closing-card p{font-size:14.5px;line-height:1.7;color:#DCE6DF;}
+
+  /* appendix */
+  #s8{background:#F5F2EB;border-top:1px solid var(--line);}
+  .pipe-table{width:100%;border-collapse:collapse;margin-top:14px;}
+  .pipe-table th,.pipe-table td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:13.3px;text-align:left;}
+  .pipe-table th{font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;}
+  code.inline{font-family:ui-monospace,Consolas,monospace;background:var(--panel);border:1px solid var(--line);
+    border-radius:4px;padding:1px 5px;font-size:12.5px;}
+  .filetree{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;line-height:1.7;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-top:14px;overflow-x:auto;color:var(--ink-soft);white-space:pre;}
+  footer{padding:32px 24px 48px;text-align:center;font-size:12px;color:var(--ink-soft);}
+
+  @media screen and (max-width:860px){
+    .grid-2,.pain-grid,.decision-cards,.split-ai,.email-grid,.exception-row,.campaign-grid,.honest-grid,.closing-grid{
+      grid-template-columns:1fr!important;}
+    section{aspect-ratio:auto;padding:56px 18px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;}}
+
+  /* print / PDF export — true A4 landscape page, 16:9 slide centered on it */
+  @media print{
+    .navbar,footer{display:none!important;}
+    html,body{background:#fff;}
+    section{
+      aspect-ratio:auto;width:297mm;height:167mm;margin:21.5mm 0 0;
+      padding:10mm 14mm;overflow:hidden;justify-content:flex-start;
+      page-break-after:always;break-after:page;page-break-inside:avoid;break-inside:avoid;
+    }
+    section:last-of-type{page-break-after:auto;break-after:auto;}
+    @page{size:297mm 210mm;margin:0;}
+
+    h2.slide-title{font-size:23px;}
+    .slide-head{margin-bottom:16px;}
+    .slide-head .sub{margin-top:6px;font-size:12.8px;line-height:1.48;}
+    .eyebrow{font-size:10.5px;}
+
+    .pain-grid{gap:10px;margin-top:4px;}
+    .pain{padding:11px 14px 9px;}
+    .pain h3{font-size:14px;margin:5px 0 4px;}
+    .pain p{font-size:12.3px;line-height:1.42;}
+    .reframe{margin-top:14px;padding:12px 18px;}
+    .reframe p{font-size:13px;line-height:1.48;margin-top:6px;}
+    .bench-table{margin-top:8px;font-size:12.5px;}
+    .bench-table th,.bench-table td{padding:5px 10px;}
+
+    .flow{margin:12px 0 16px;}
+    .flow .node{padding:10px 10px;font-size:12px;line-height:1.4;}
+    .decision-cards{gap:10px;margin-top:4px;}
+    .dcard{padding:11px 13px;}
+    .dcard h3{font-size:13px;margin-bottom:4px;}
+    .dcard p{font-size:12px;line-height:1.42;}
+    .split-ai{margin-top:12px;gap:10px;}
+    .split-ai>div{padding:11px 14px;}
+    .split-ai .eyebrow{margin-bottom:5px;}
+    .split-ai ul{font-size:12px;line-height:1.42;}
+
+    .email-grid{gap:10px;margin-top:12px;}
+    .email-card{padding:12px 12px 10px;gap:7px;}
+    .email-card .subj{font-size:12.5px;}
+    .email-card .body-text{font-size:11.3px;line-height:1.42;max-height:none;}
+    .exception-row{gap:10px;margin-top:14px;}
+    .exc-card{padding:10px 12px;}
+    .exc-card p{font-size:11.8px;line-height:1.4;margin-top:5px;}
+
+    table.impact th,table.impact td{padding:6px 10px;font-size:12.3px;}
+    #s5 h3{margin:18px 0 4px!important;font-size:13.5px;}
+    .repro-wrap{margin-top:6px;}
+    table.repro th,table.repro td{padding:5px 10px;font-size:11.8px;}
+    .assumption{margin-top:10px;padding:9px 14px;font-size:11.3px;line-height:1.42;}
+
+    .campaign-grid{gap:10px;margin-top:10px;}
+    .campaign{padding:12px;}
+    .campaign h3{font-size:13.5px;margin:6px 0 5px;}
+    .campaign .seg{font-size:11.3px;padding:5px 8px;margin-bottom:6px;line-height:1.4;}
+    .campaign ol{font-size:11.8px;line-height:1.42;margin:0 0 6px;}
+    .campaign .score{font-size:11.3px;padding-top:5px;}
+    .honest-grid{gap:10px;margin-top:14px;}
+    .honest{padding:11px 14px;}
+    .honest ul{font-size:12px;line-height:1.42;margin-top:6px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navrow">
+    <a href="#s0">00 표지</a>
+    <a href="#s1">01 요약</a>
+    <a href="#s2">02 문제이해</a>
+    <a href="#s3">03 설계·접근</a>
+    <a href="#s4">04 산출물</a>
+    <a href="#s5">05 임팩트</a>
+    <a href="#s6">06 확장·한계</a>
+    <a href="#s7">07 마무리</a>
+    <a href="#s8">별첨 기술상세</a>
+  </div>
+</nav>
+
+<section id="s0">
+  <div class="wrap">
+    <div class="presenter-bar">
+      <div class="presenter-id">
+        <span class="avatar">도연</span>
+        <div class="who">
+          <b>김도연</b>
+          <span>DA · PM · 마케터</span>
+        </div>
+      </div>
+      <a class="gh-pill" href="https://github.com/my1004you2-boop" target="_blank" rel="noopener">
+        <span class="arrow">↗</span> github.com/my1004you2-boop
+      </a>
+    </div>
+    <span class="eyebrow">AX 해커톤 · Problem 05 · 키즐링</span>
+    <h1>48시간의 골든타임,<br><span class="tag">8시간의 수작업</span> 대신 <span class="tag">자동화</span>로 지킨다</h1>
+    <p class="lede">에듀테크 스타트업 키즐링의 박람회 후속 이메일 문제를 AX 해커톤 과제로 설계하고, Basic → Standard → Challenge 3단계를 직접 실행해 참조 결과물까지 만들었습니다.</p>
+    <div class="meta-row">
+      <div><b>문제 설계</b>레벨 구조 · 데이터 · 채점기준 직접 수립</div>
+      <div><b>참조 솔루션 실행</b>Claude Code Skill 4단계로 리드 50건 처리</div>
+      <div><b>검증</b>100건 신규 CSV로 재현성까지 확인</div>
+    </div>
+    <div class="timeline">
+      <span>0:00–0:30 표지·요약</span><span>0:30–1:30 문제이해</span><span>1:30–2:30 접근·의사결정</span>
+      <span>2:30–3:30 산출물 데모</span><span>3:30–4:15 임팩트</span><span>4:15–5:00 한계·확장·마무리</span>
+    </div>
+  </div>
+</section>
+
+<section id="s1">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">01 · 한 장 요약</span>
+      <h2 class="slide-title">한 장 요약</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="quote-block">
+          "박람회에서 수집한 리드 명단을 분석해 <b>직책별 소구점이 반영된 개인화 후속 이메일 초안</b>을 생성한다. 각 이메일은 ①맞춤 인사 ②부스 상담내용 언급 ③직책별 소구점→제품 연결 ④명확한 CTA 4요소를 포함하고, 상담 메모가 비었거나 모호한 리드·이메일이 없는 리드는 예외 처리(review_flag)한다."
+          <div style="margin-top:10px;font-size:12px;color:var(--ink-soft);">— CLAUDE.md / problem.md 미션 원문 요약</div>
+        </div>
+        <p style="font-size:15px;line-height:1.7;">
+          <b>만든 것</b> — 리드 CSV를 넣으면 <b>원장·팀장·사업개발</b> 3직책이 서로 다른 소구점·CTA로 개인화된 이메일 초안과 예외 플래그를 자동 생성하는 Claude Code Skill(<code class="inline">/analyze → /insight → /generate → /review</code>) 파이프라인. 문제 자체도 이 구조에 맞춰 새로 설계했습니다.
+        </p>
+      </div>
+      <div>
+        <div class="stat-row">
+          <div class="stat"><span class="num">8h→즉시</span><div class="label">50건 수작업 8시간+<br>→ 파이프라인 1회 실행</div></div>
+          <div class="stat"><span class="num">50/100</span><div class="label">Basic 50건 처리<br>+ 재현성 테스트 100건</div></div>
+          <div class="stat"><span class="num">5→10</span><div class="label">review_flag=Y 예외<br>정확 검출 (50건→100건)</div></div>
+        </div>
+        <ul class="scope-list" style="margin-top:22px;">
+          <li class="did">직책별 차별화 소구점·CTA 매핑 (원장/팀장/사업개발)</li>
+          <li class="did">개인화 4요소 + review_flag 예외 처리 규칙 설계</li>
+          <li class="did">새 CSV 투입 재현성 검증 (50건 → 100건)</li>
+          <li class="did">데이터 기반 후속 캠페인 기획안 2건</li>
+          <li class="didnot">실발송(SMTP/Gmail) · CRM 연동 · 리드 스코어링 — 과제 스코프 외</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">02 · 문제 이해</span>
+      <h2 class="slide-title">"이메일을 늦게 써서"가 아니라 "직책마다 다른 말을 못 해서" 놓치는 리드</h2>
+      <p class="sub">키즐링 영업팀은 에듀플러스위크 같은 박람회에서 수십 명의 명함·상담 메모를 모으지만, 후속은 담당자 1인의 수작업입니다.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain"><span class="n">PAIN 01</span><h3>시간 폭발</h3><p>리드 1명당 10~15분 → 50명이면 8시간 이상. 박람회 다음 날 바로 담당자 1인이 감당 못 하는 물량이 쌓입니다.</p></div>
+      <div class="pain"><span class="n">PAIN 02</span><h3>직책별 맥락 분기 미흡</h3><p>원장은 "원생 효과", 팀장은 "도입이 쉬운가", 사업개발은 "수익 모델"을 묻는데 같은 톤의 이메일은 누구에게도 꽂히지 않습니다.</p></div>
+      <div class="pain"><span class="n">PAIN 03</span><h3>상담 내용 휘발</h3><p>부스에서 나눈 구체적인 대화가 이메일에 반영되지 않으면 "우리를 기억 못 하는 회사"라는 인상을 줍니다.</p></div>
+      <div class="pain"><span class="n">PAIN 04</span><h3>48시간 골든타임 이탈</h3><p>박람회 후 48시간이 지나면 관심이 식고, 늦은 후속은 경쟁사에게 리드를 그대로 넘겨주는 것과 같습니다.</p></div>
+    </div>
+    <div class="reframe">
+      <span class="eyebrow">내가 재정의한 문제</span>
+      <p>이건 "이메일 작성이 느리다"는 속도 문제가 아니라, <b>골든타임 48시간 안에 직책마다 다른 이야기를 할 수 있는가</b>의 문제입니다. 겪는 사람은 영업 담당자 1인, 겪는 시점은 매 박람회 직후, 빈도는 박람회가 열릴 때마다 반복됩니다. 그래서 이번 과제는 "이메일 1건을 잘 쓰는 법"이 아니라 <b>"매번 반복돼도 같은 품질로 도는 규칙"</b>을 만드는 것으로 스코프를 잡았습니다.</p>
+      <table class="bench-table">
+        <thead><tr><th>업계 벤치마크 (개인화 효과)</th><th>수치</th></tr></thead>
+        <tbody>
+          <tr><td>개인화 제목 → 오픈율</td><td class="num">+26%</td></tr>
+          <tr><td>상담 내용 언급 → 응답률</td><td class="num">+40%</td></tr>
+          <tr><td>직책 맞춤 소구점 → 클릭률</td><td class="num">+15%</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px;font-size:12.5px;color:var(--ink-soft);">출처: industry-news.md 벤치마크(스티비·리캐치 등 인용) — 키즐링 실측치 아님, 목표 방향성 참고 지표.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">03 · 설계 & 해결 접근</span>
+      <h2 class="slide-title">어떻게 풀기로 했나 — 그리고 어디서 막혔나</h2>
+      <p class="sub">1회성 프롬프트가 아니라 <b>매 박람회마다 재사용 가능한 규칙</b>으로 만들어야 실제 운영에 쓰인다는 가설로, 4단계 Skill 파이프라인을 설계했습니다.</p>
+    </div>
+    <div class="flow">
+      <div class="node"><span class="step">STEP 1 · /analyze</span><br>리드 명단에서 직책·결측·중복을 먼저 확인한다</div>
+      <div class="arrow">→</div>
+      <div class="node"><span class="step">STEP 2 · /insight</span><br>직책마다 다른 이야기 방식(소구점·CTA)을 정한다</div>
+      <div class="arrow">→</div>
+      <div class="node"><span class="step">STEP 3 · /generate</span><br>리드별로 인사→상담언급→제품연결→CTA 순서로 초안을 쓴다</div>
+      <div class="arrow">→</div>
+      <div class="node"><span class="step">STEP 4 · /review</span><br>애매한 건 사람이 보게 표시하고, 발송 전 자가 점검한다</div>
+    </div>
+
+    <h3 style="font-size:16px;margin-bottom:6px;">막혔던 지점 & 돌파</h3>
+    <div class="decision-cards">
+      <div class="dcard blocked">
+        <span class="tag">막힌 지점</span>
+        <h3>"원장"이라는 직함이 모든 기관에 안 맞았다</h3>
+        <p>title은 전부 "원장"인데 실제로는 초등학교 교장·지역아동센터 센터장·태권도장 관장처럼 호칭 관례가 다른 3건을 발견. 세그먼트(소구점·CTA)는 그대로 두고 인사말 호칭만 자연스럽게 바꾸는 규칙으로 해결했습니다.</p>
+      </div>
+      <div class="dcard blocked">
+        <span class="tag">막힌 지점</span>
+        <h3>재현성 테스트에서 처음 보는 직책이 등장</h3>
+        <p>100건 CSV에 교장·PM·주무관이 새로 등장. interest_feature까지 보정하는 2단계 매핑을 검토했지만 규칙이 복잡해지고 재현성이 떨어질 위험이 있어, title 단일 기준의 고정 매핑표로 단순화했습니다.</p>
+      </div>
+      <div class="dcard judgment">
+        <span class="tag">버린 대안</span>
+        <h3>전 직책 공통 CTA 단일화</h3>
+        <p>"상담 신청"처럼 하나로 통일하면 관리는 쉽지만 직책별 니즈 차이가 사라져 클릭률이 떨어질 것으로 판단해 폐기.</p>
+      </div>
+      <div class="dcard judgment">
+        <span class="tag">버린 대안</span>
+        <h3>title-note 불일치를 사람이 매번 재판단</h3>
+        <p>title과 상담 메모 내용이 어긋난 리드를 그때그때 재해석하면 review_flag=Y 비율이 과도해지고 예측 불가능해져, title 기준을 고수하는 쪽을 선택.</p>
+      </div>
+    </div>
+
+    <div class="split-ai">
+      <div class="ai">
+        <span class="eyebrow">AI(Claude)에게 맡긴 것</span>
+        <ul><li>리드 50~100건의 문장을 각각 다르게 쓰는 반복 생성</li><li>상담 메모를 자연스러운 한 문장으로 녹여 넣는 표현</li><li>동일 규칙을 새 CSV에 그대로 적용하는 실행</li></ul>
+      </div>
+      <div class="human">
+        <span class="eyebrow">내가 직접 판단한 것</span>
+        <ul><li>직책별 소구점·CTA 매핑, 우선순위×직책 강도 매트릭스</li><li>review_flag 판단 기준선(공란·모호 정의)</li><li>호칭 예외, 신규 직책 매핑, 캠페인 세그먼트 선정 가중치</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">04 · 산출물 & 실증</span>
+      <h2 class="slide-title">실제로 이렇게 돌아갑니다</h2>
+      <p class="sub">같은 부스, 같은 회사(키즐콘) 소개인데 직책에 따라 완전히 다른 이메일이 나옵니다. 아래는 <code class="inline">output/email_drafts.csv</code>에서 그대로 가져온 실제 결과입니다.</p>
+    </div>
+    <div class="email-grid">
+      <div class="email-card">
+        <span class="role-badge role-원장">L001 · 원장</span>
+        <div class="subj">[키즐링] 김민준 원장님, 매년 여는 영어스피치 대회를 자동화하는 방법 — 키즐콘 안내</div>
+        <div class="body-text">한빛영어학원에서 원생 180명 규모로 매년 영어스피치 대회를 여시는데 접수부터 심사·결과발표까지 수기로 진행하시느라 힘드시다는 이야기가 기억에 남습니다. 키즐콘은 대회 접수·결제·심사·결과발표를 한 번에 자동화하고 원생들의 발표 영상을 학부모님께 바로 공유해 재등록률을 높이는 데 도움을 드립니다…</div>
+        <div class="foot"><span class="cta-chip">무료 데모 신청</span><span class="flag N">review_flag N</span></div>
+      </div>
+      <div class="email-card">
+        <span class="role-badge role-팀장">L022 · 팀장</span>
+        <div class="subj">[키즐링] 한승우 팀장님, 개발 공수를 최소화하는 연동 방법 — 키즐콘 안내</div>
+        <div class="body-text">자사 플랫폼과 키즐콘의 연동 난이도를 가장 궁금해하시고 개발 공수 최소화가 중요하다고 하신 말씀 잘 들었습니다. 키즐콘은 API 기반으로 기존 워크플로/시스템과 쉽게 연동되도록 설계되어 있어 클래스노트의 개발 리소스를 크게 들이지 않고도 대회 운영 기능을 빠르게 붙일 수 있습니다…</div>
+        <div class="foot"><span class="cta-chip">기술 도입 미팅</span><span class="flag N">review_flag N</span></div>
+      </div>
+      <div class="email-card">
+        <span class="role-badge role-사업개발">L039 · 사업개발</span>
+        <div class="subj">[키즐링] 장민호님, 참가 기관 공동 공급 파트너십 제안의 건 — 키즐콘</div>
+        <div class="body-text">참가 기관에 키즐콘을 공동 공급하는 파트너십 모델을 제안해 주시고 수익 배분 구조를 논의하고 싶다고 하신 말씀 감사했습니다. 한국교육박람회사무국과 키즐링이 공동 공급·공동 마케팅으로 함께 성장하는 파트너십을 그려볼 수 있다고 생각합니다…</div>
+        <div class="foot"><span class="cta-chip">파트너십 제안서 송부</span><span class="flag N">review_flag N</span></div>
+      </div>
+    </div>
+
+    <div class="exception-row">
+      <div class="exc-card">
+        <span class="eyebrow">예외 처리 1 · 상담 메모 모호</span>
+        <p><b>L012 (원장)</b> — 부스에서 짧게 인사만 나눠 구체적 니즈가 파악되지 않은 리드. 본문을 지어내지 않고 일반 소개 자료 발송으로 대체하며 <span class="flag Y">review_flag Y</span> 처리, 사람이 보강 후 발송하도록 남겼습니다.</p>
+      </div>
+      <div class="exc-card">
+        <span class="eyebrow">예외 처리 2 · 이메일 결측</span>
+        <p><b>L009 (원장)</b> — 이메일이 없어 발송 자체가 금지된 리드. 실제 이메일 대신 <code class="inline">[내부메모]</code> 행으로 전환해 전화·방문 후속과 이메일 재확보를 권장하는 문구를 남기고 <span class="flag Y">review_flag Y</span> 처리했습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">05 · 임팩트</span>
+      <h2 class="slide-title">효과가 있나, 얼마나</h2>
+    </div>
+    <table class="impact">
+      <thead><tr><th>핵심 지표</th><th>Before</th><th>After</th></tr></thead>
+      <tbody>
+        <tr><td>리드 50건 후속 이메일 작성</td><td class="before">담당자 1인 수작업, 8시간 이상</td><td class="after">파이프라인 1회 실행으로 초안 50건 자동 생성</td></tr>
+        <tr><td>직책별 메시지 분기</td><td class="before">전 리드 동일 톤 (분기 없음)</td><td class="after">원장·팀장·사업개발 소구점·CTA 100% 분기</td></tr>
+        <tr><td>예외(결측·모호·중복) 처리</td><td class="before">사람이 매번 개별 판단, 누락 위험</td><td class="after">규칙 고정 → review_flag 5건(50건) / 10건(100건) 정확 검출</td></tr>
+        <tr><td>새 리드 CSV 투입</td><td class="before">처음부터 다시 작성</td><td class="after">코드·설계 변경 없이 100건 동일 품질 재현</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-size:15px;margin:34px 0 4px;">재현성 검증 — 50건 → 100건, 같은 규칙 그대로</h3>
+    <div class="repro-wrap">
+      <table class="repro">
+        <thead><tr><th>지표</th><th>Basic (leads_sample, 50건)</th><th>재현성 테스트 (100건)</th></tr></thead>
+        <tbody>
+          <tr><td>이메일 결측</td><td class="num">1건 (L009)</td><td class="num">1건 (L016)</td></tr>
+          <tr><td>상담메모 결측·모호</td><td class="num">4건</td><td class="num">9건</td></tr>
+          <tr><td>review_flag=Y 총계</td><td class="num">5건</td><td class="num">10건</td></tr>
+          <tr><td>완전 중복 리드</td><td class="num">1건 (L039=L050)</td><td class="num">0건</td></tr>
+          <tr><td>신규 직책값 처리</td><td class="num">해당 없음</td><td class="num">교장 6 · PM 11 · 주무관 6 → 매핑 규칙대로 정상 편입</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="assumption">
+      <b>측정 방식 / 가정 명시.</b> "8시간"은 리드당 10~15분 수기 작성 기준 업계 통상치를 적용한 추정이며 실측 시간이 아닙니다. 오픈율·응답률·클릭률 개선 폭은 industry-news.md에 인용된 업계 벤치마크로, 키즐링의 실제 발송 성과가 아닌 목표 방향성 지표입니다. review_flag 수치는 정의된 규칙(공란·모호·결측)을 CSV에 그대로 적용해 산출한 값입니다.
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">06 · 적용 가능성 & 확장</span>
+      <h2 class="slide-title">데이터가 말해준 다음 캠페인, 그리고 정직한 한계</h2>
+      <p class="sub">50건 리드 데이터에서 발견한 두 가지 강한 패턴을 실행 가능한 캠페인 기획으로 정리했습니다. 선정 기준은 <b>세그먼트 규모×의향 40% · 계약 임팩트 40% · 골든타임 민감도 20%</b>로 직접 설계했습니다.</p>
+    </div>
+    <div class="campaign-grid">
+      <div class="campaign">
+        <span class="p-badge">P0 · 90점</span>
+        <h3>에듀테크 팀장 연동·도입 데모 트랙</h3>
+        <div class="seg">org_type=에듀테크기업 & title=팀장 & priority=상 (팀장 18명 중 '상' 비중 최다)</div>
+        <ol><li>Day0 — 연동 중심 개인화 초안 발송</li><li>Day2 — 미응답 시 도입효과 자료 발송</li><li>Day5 — 기술 도입 미팅 제안</li></ol>
+        <div class="score">근거 리드: L022 한승우 · L026 윤태경 · L035 김태현 — 골든타임 민감도 최고, 즉시 전환 목표</div>
+      </div>
+      <div class="campaign">
+        <span class="p-badge">P1 · 80점</span>
+        <h3>파트너십 BD 기관공급·공동마케팅 트랙</h3>
+        <div class="seg">title=사업개발 & interest_feature=파트너십 (12명 전건, 100%)</div>
+        <ol><li>Day0 — 파트너십 인사 + 제안서 예고</li><li>Day3 — 수익배분모델 제안서 전달</li><li>Day7 — 사업개발 미팅 협의</li></ol>
+        <div class="score">근거 리드: L039/L050 장민호(중복등록=강한 관심신호) · L044 신동욱 · L049 김선우 — 계약 임팩트 최고, 협상 사이클이 길어 P0보다 후순위</div>
+      </div>
+    </div>
+
+    <div class="honest-grid">
+      <div class="honest limit">
+        <span class="eyebrow limit-e">아쉬웠던 부분 (정직하게)</span>
+        <ul>
+          <li>이번 스코프는 초안 생성까지라 실제 발송 후 오픈율·응답률 피드백 루프는 검증하지 못했습니다.</li>
+          <li>review_flag는 결측·모호를 걸러내지만, 걸리지 않는 미세한 표현 오차는 여전히 사람 눈검수가 필요합니다.</li>
+          <li>title-note 불일치 같은 경계 케이스는 재현성을 위해 규칙을 단순하게 고수한 만큼 일부 개별 정확도를 희생했습니다.</li>
+        </ul>
+      </div>
+      <div class="honest next">
+        <span class="eyebrow next-e">2주 더 주어진다면</span>
+        <ul>
+          <li>review_flag=Y 리드를 사람이 빠르게 보강할 수 있는 최소 검토 워크플로 설계</li>
+          <li>실제 발송 후 오픈·응답 데이터를 소구점·CTA 규칙에 되먹이는 학습 루프</li>
+          <li>P0/P1 캠페인 실행 후 성과 측정으로 우선순위 점수 산정 기준 재보정</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">07 · 마무리</span>
+      <h2 class="slide-title">리드의 48시간 골든타임, 이제 제 퇴근시간보다 더 잘 챙깁니다</h2>
+      <p class="sub">농담처럼 들리겠지만 절반은 진심입니다 — 사람이 매번 챙기던 골든타임을, 규칙과 파이프라인이 대신 지키게 만든 것이 이번 프로젝트의 전부입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="wrap">
+    <div class="slide-head">
+      <span class="eyebrow">별첨 · 기술 & 논리 상세</span>
+      <h2 class="slide-title">깊은 기술 검증을 원하는 분만 여기로</h2>
+    </div>
+    <table class="pipe-table">
+      <thead><tr><th>커맨드</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inline">/analyze</code></td><td>직책·기관유형·우선순위 분포, 이메일/상담메모 결측·모호, 완전 중복 탐지</td></tr>
+        <tr><td><code class="inline">/insight</code></td><td>직책별 소구점→제품 연결, CTA, review_flag 기준 수립</td></tr>
+        <tr><td><code class="inline">/generate</code></td><td>리드별 이메일 초안(제목·본문·review_flag) 생성 → output/email_drafts.csv</td></tr>
+        <tr><td><code class="inline">/review</code></td><td>직책 차별화·개인화 4요소·본문 품질·예외 처리 자가 점검</td></tr>
+      </tbody>
+    </table>
+    <div class="filetree">[05] 키즐링/
+├── CLAUDE.md · problem.md · decisions.md · design-conversation.md
+├── data/leads_sample.csv (50건) · leads_dummy_100_test.csv (100건)
+├── context/company-info.md · industry-news.md
+├── .claude/skills/ (analyze · insight · generate · review)
+└── output/email_drafts.csv · email_drafts_test.csv · sample-basic/standard/challenge.html</div>
+    <p style="margin-top:18px;font-size:13.3px;color:var(--ink-soft);line-height:1.6;">
+      전체 의사결정과 대안·이유 8건은 <code class="inline">decisions.md</code>에 기록되어 있습니다 (직책별 소구점 매핑, review_flag 기준, 이메일 결측·중복 처리, 호칭 커스터마이징, 우선순위×직책 CTA 강도 매트릭스, 신규 직책값 매핑, 재현성 테스트 결과, Challenge 세그먼트 선정 기준).
+    </p>
+  </div>
+</section>
+
+<footer>키즐링 × AX 해커톤 Problem 05 — 문제 설계 & 참조 솔루션 · 2026-07-01</footer>
+
+</body>
+</html>
